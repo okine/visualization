@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Audio Visualizer</title>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" 
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" 
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+
+        <link rel="stylesheet" href="../css/visualize_style.css">
+        <script src="../js/visualize_script.js"></script>
+        <link rel="icon" href="../img/favoricon.jpg">
+    </head>
+
+    <body style="width: auto; margin: 0;padding: 0;background-image: url(../img/background.jpg);background-repeat: no-repeat;background-size: cover;">
+        <div class="col-md-7">
+            <div >
+                <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" style="margin-top: 5px;">
+                    <li role="presentation" ><a href="home.html"><img src="../img/favoricon.jpg" style="height: 25px;width: 25px;" alt="音乐可视化">音乐可视化</a></li>
+                    <li role="presentation" class="active"><a href="visualize.html" >可视化视频制作</a></li>
+                    <li role="presentation"><a href="help.html">帮助</a></li>
+                    
+                    <li role="presentation"><a href="about.html">关于</a></li>
+                    <li role="presentation"><a href="login.html">登录</a></li>
+                    <li role="presentation"><a href="register.html">注册</a></li>
+                </ul>
+            </div>
+            <div id=scheme_bar style="display: none;">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" style="float: right;">
+                    <li id="scheme1" role="presentation" class="active"><a aria-controls="home" role="tab" data-toggle="tab" style="cursor: pointer;">方案一</a></li>
+                    <li id="scheme2" role="presentation"><a aria-controls="profile" role="tab" data-toggle="tab" style="cursor: pointer;">方案二</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home"></div>
+                    <div role="tabpanel" class="tab-pane" id="profile"></div>
+                </div>
+            </div>
+            <div id="canvas_div" style="margin-top: 30px;margin-bottom: 10px;padding: 0px;width: 880px;height: 520px;display: none;">
+                <div">
+                    <canvas id="default_canvas" style="visibility: hidden;position: absolute;width: 880px;height: 495px;border: 1px solid #000;">
+                    </canvas>
+                    <input type="file" id="file-input" accept="audio/*"style="visibility:hidden;">
+                    <audio id="audio" loop>
+                        <source id="audio-source" type="audio/mp3" >
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div id="bottom" style="display: none;">
+                    <div style="height:28px;width:880px;border: 1px solid #000; border-radius: 14px;display: inline-block;position: relative;bottom: 6px;">
+                        <img id="backward" src="../img/backward.png" alt="后退" style="height:25px;width:25px;cursor: pointer;position: relative;top: 0px;"title="后退5秒">
+                        <img id="situation_play" src="../img/play.png" alt="播放" style="height:22px;width:22px;cursor: pointer;position: relative;top: 0px;"title="播放">
+                        <img id="situation_pause" src="../img/pause.png" alt="暂停" style="height:22px;width:22px;cursor: pointer;position: relative;top: 0px;"title="暂停">
+                        <img id="forward" src="../img/forward.png" alt="前进" style="height:25px;width:25px;cursor: pointer;position: relative;top: 0px;"title="前进5秒">
+                        <span> <span id="time">0</span>s</span>
+                        <span>/</span>
+                        <span><span id="duration">0</span>s</span>
+                        <progress id="progress-bar" value="0" max="100" display="float"style="width: 680px;position: relative;top: 4px;cursor: pointer"></progress>
+                    </div>
+                    <div>
+                        <label>是否启用自选图片背景</label></br>
+                        <img id="picture_on" src="../img/switch_on.png" alt="启用设置背景图片" style="height:25px;width:50px;cursor: pointer;display: none;"title="启用图片背景中，关闭后可用纯色背景">
+                        <img id="picture_off" src="../img/switch_off.png" alt="启用纯色背景" style="height:25px;width:50px;cursor: pointer;"title="图片背景关闭中，启用后可设置图片背景">
+                        <input type="file" id="background-image-input" accept="Image/*"style="display:none;">
+                        <button id="background-image-input_button" onclick="document.getElementById('background-image-input').click();"disabled>上传背景图片</button>
+                        
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <div class="col-md-1">
+            <button  id="upload" onclick="document.getElementById('file-input').click();">上传音乐</button>
+            <div id="rightArea_one" style="display: none;width: 160px;">
+                <div id="bgRange">
+                    <p><b>点击更改背景颜色</b> </p>
+                    <label>红色值</label><input type="range" id="bgRedRange" class="bgRange" min="0" max="255" step="1" value="220" style="width: 60px;"title=220 oninput="this.title = this.value;">
+                    <span id="bgRangeTip" class="tooltip" style="visibility: hidden;">0</span>
+                    <label>绿色值</label><input type="range" id="bgGreenRange" class="bgRange" min="0" max="255" step="1" value="220" style="width: 60px;"title=220 oninput="this.title = this.value;">
+                    <label>蓝色值</label><input type="range" id="bgBlueRange" class="bgRange" min="0" max="255" step="1" value="220" style="width: 60px;"title=220 oninput="this.title = this.value;">
+                </div>
+                <div id="titleRange">
+                    <p><b>点击更改标题颜色</b> </p>
+                    <label>红色值</label><input type="range" id="tiRedRange" class="tiRange" min="0" max="255" step="1" value="0" style="width: 60px;"title=0 oninput="this.title = this.value;">
+                    <span id="bgRangeTip" class="tooltip" style="visibility: hidden;">0</span>
+                    <label>绿色值</label><input type="range" id="tiGreenRange" class="tiRange" min="0" max="255" step="1" value="0" style="width: 60px;"title=0 oninput="this.title = this.value;">
+                    <label>蓝色值</label><input type="range" id="tiBlueRange" class="tiRange" min="0" max="255" step="1" value="0" style="width: 60px;"title=0 oninput="this.title = this.value;">
+                    <label>透明度值</label><input type="range" id="titransRange" class="tiRange" min="0" max="1" step="0.11" value="1" style="width: 60px;"title=1 oninput="this.title = this.value;">
+                </div>
+                <div id="recRange">
+                    <p><b>点击更改条形外观</b></p>
+                    <label>红色值</label><input type="range" id="recRedRange" class="recRange" min="0" max="2.55" step="0.01" value="0.39" style="width: 60px;"title=0.39 oninput="this.title = this.value;">
+                    <label>绿色值</label><input type="range" id="recGreenRange" class="recRange" min="0" max="2.55" step="0.01" value="1.87" style="width: 60px;"title=1.87 oninput="this.title = this.value;">
+                    <label>蓝色值</label><input type="range" id="recBlueRange" class="recRange" min="0" max="2.55" step="0.01" value="1.97" style="width: 60px;"title=1.97 oninput="this.title = this.value;">
+                    <label>透明度值</label><input type="range" id="rectransRange" class="recRange" min="0" max="1" step="0.11" value="1" style="width: 60px;"title=1 oninput="this.title = this.value;">
+                    <label>颜色变化灵敏度</label><input type="range" id="colorSensitivity" class="recRange" min="0.5" max="3.5" step="0.2" value="1.5" style="width: 60px;">
+                    <!--<label>形变灵敏度</label><input type="range" id="recSensitivity" class="recRange" min="1" max="3" step="0.5" value="1" style="width: 60px;">-->
+                    <label>条形宽度</label><input type="range" id="density" class="recRange" min="6" max="14" step="1" value="9" style="width: 60px;">
+                    <!--<label>条形间隔</label><input type="range" id="gap" class="recRange" min="1" max="7" step="1" value="0.5" style="width: 60px;">-->
+                </div>
+                <button id="export">导出视频</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div id="rightArea_two" style="display: none;overflow: auto;">
+                <p><b>在这里制作歌词字幕</b>
+                    <img id="lrc_tips" src="../img/tips.png" style="height: 15px;width: 15px;cursor: pointer;">
+                </p>
+                
+                <textarea id="lrc_content" style="overflow-x: auto;overflow-y: auto;width: 480px;height: 300px;"></textarea>
+                </br>
+                <button id="lrc_save">更新歌词</button>
+                <div style="display: inline-block;width: 295px;">
+                    <img id="lrcsave_tips" src="../img/tips.png" style="height: 15px;width: 15px;cursor: pointer;float: right;display: none">
+                </div>
+                <button id="lrc_filesave" style="float: right;display: none">保存歌词文件</button>
+                <div id="lrc_area" style="margin-top: 10px;margin-bottom: 10px;">
+                    <div id="startArea">
+                    <label for="startTime">开始时间</label>
+                    <input type="text" id="startTime" class="timepicker" style="width: 90px;">
+                    </div>
+                    <label for="currentlrc">歌词内容</label><input type="text" id="currentlrc" type="text" style="width:480px;height: 40px;" >
+                    <label for="lrc_trans">歌词翻译(无翻译可不填)</label><input type="text" id="lrc_trans" type="text" style="width:480px;height: 40px;" >
+                    <div id="endArea">
+                    <label for="endTime">结束时间</label>
+                    <input type="text" id="endTime" class="timepicker"style="width: 90px;">
+                    </div>
+                </div>
+                    <button id="addlrc">添加</button>
+            </div>
+            <div class="modal fade" id="lrc_tipsArea">
+                <div class="modal-dialog modal-lg">
+                    <div  class="modal-content">
+            
+                        <!-- 模态框头部 -->
+                        <div class="modal-header">
+                        <h4 class="modal-title">制作歌词提示</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- 模态框主体 -->
+                        <div class="modal-body">        
+                        <textarea rows='6' cols='100' readonly>
+                            点击大文本框可输入歌词，下方文本框组可辅助歌词输入
+                            点击【开始时间】可输入开始时间，依次输入【小时，分钟，秒，毫秒】
+                            未输入的部分自动补零
+                            【结束时间】同理，开始时间和结束时间控制字幕的出现时间和消失时间
+                            点击添加可将文本添加进大文本框
+                            可以直接在大文本框中修改时间或是歌词，但是不可改变格式
+                            序号，时间，歌词，翻译（无翻译则为空行），空行
+                            点击保存按键以更新歌词显示
+                        </textarea>     
+                        </div>
+                        <!-- 模态框底部 -->
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="lrcsave_tipsArea">
+                <div class="modal-dialog modal-lg">
+                    <div  class="modal-content">
+            
+                        <!-- 模态框头部 -->
+                        <div class="modal-header">
+                        <h4 class="modal-title">提示</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- 模态框主体 -->
+                        <div class="modal-body">        
+                        <textarea rows='6' cols='100' readonly>
+                            实际上，这个格式的文本可以作为srt文件，这是一种常用的字幕文件格式。
+                            如果有需要，可以将它保存下来。
+                            另外，如果要再次用本网站来修改字幕时，可以用文本编辑器（如记事本）打开保存过的srt文件，
+                            全选复制后粘贴到上方大文本框中
+                        </textarea>     
+                        </div>
+                        <!-- 模态框底部 -->
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Audio Visualizer</title>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" 
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" 
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+
+        <link rel="stylesheet" href="../css/visualize_style.css">
+        <!--<script src="../js/visualize_script.js"></script>-->
+        <link rel="icon" href="../img/favoricon.jpg">
+    </head>
+    <style>
+        li{
+            margin-top: 5px;
+            margin-left: 5px;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <body style="background-image: url(../img/canvas_background.jpg);background-repeat:no-repeat ;">
+        <div>
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist"">
+                    <li role="presentation" class="active"><a href="home.html"><img src="../img/favoricon.jpg" style="height: 25px;width: 25px;" alt="音乐可视化">音乐可视化</a></li>
+                    <li role="presentation"><a href="visualize.html" >可视化视频制作</a></li>
+                    <li role="presentation"><a href="help.html">帮助</a></li>
+                    
+                    <li role="presentation"><a href="about.html">关于</a></li>
+                    <li role="presentation"><a href="login.html">登录</a></li>
+                    <li role="presentation"><a href="register.html">注册</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="col-md-3">
+                    <div>
+                        
+                    </div>
+                </div>
+                <div class="col-md-6" style="text-align: center;color:#270fda;font-family:微软雅黑;font-size: 30px;">
+                    <h1 style="text-align: center;">什么是“音乐可视化”</h1>
+                    <p>音乐可视化的定义是：音乐可视化，是指一种以视觉为核心，以音乐为载体，以大众为诉求对象，借助多种新媒体技术等传播媒介，通过画面、影像来诠释音乐内容的、视听结合的大众化传播方式。</p>
+                    <p>
+                        在传统意义上，音乐属于耳朵，是用听觉体验美感的艺术。人们在欣赏音乐时，往往是在倾听的基础上，通过“音响感知与情绪感受”“形象联想与理性感悟”以及“音乐美的体验与感悟”等阶段，完成对音乐作品由感性到理性的审美体验过程。音乐具有形象思维的特点，在情感的伴随下，通过想象联想，获得音乐形象、生活情景以及意境等形象，音乐可视化变为现实。因此在上世纪三四十年代，迪斯尼凭借“可以听动画”“看古典音乐”的创造性思维将音乐与传统动画结合起来的探索，并将这种开创性的思维融进了1940年的《幻想曲》和2000年的《幻想曲2000》创作中，进一步实现着以动画诠释音乐情绪、将经典音乐和动画艺术融为一体。
+                        </br>将音乐这门听觉艺术带入视听结合的新境界，《幻想曲》系列片可以说是一个开创性的举措，为音乐可视化奉献了一个绝佳的典型。
+                        音乐可视化可为欣赏音乐艺术开通崭新的渠道，中科院自动化所科学艺术中心在成功创作了大量三维动画作品后，正式为新媒体产业化在音乐可视化中发力，2012年将推出巨型球幕影片《化蝶》，该片将用逼真的三维动画技术秉承视觉诠释听觉的艺术创作理念，对中国传统经典进行科学而艺术地全面解读。精心选取的极具代表性的中国音乐，无论是明亮的快板，还是低沉的雄壮都有力地展开表现出爱情的亘古悠长。动画师们通过三维动画的形式将音乐意象具体化，把诸多的音乐元素赋予了十分明确的表现意义。借助动画的表现，有助于欣赏者加深对作品内涵的理解和认识，并提供从经典音乐作品重升华新的情感感受的契机，使得视觉感知拓展、延伸了听觉艺术的美感范畴，为欣赏音乐开通了一条崭新的渠道。
+                        同时，音乐可视化增强了“寓教于乐”的功效。艺术教育是激发人们求知兴趣，用艺术和美的方式契合人们对事物认知的心理。因此，激发儿童对音乐的兴趣，并深化为一种智慧和能力是音乐教育的主要目的之一。纯粹的音乐听力训练在激发兴趣阶段收效甚微，而音乐可视化的音乐教育则将无形的音符、旋律等音乐理论知识化为悦目的视觉形象，例如1940年的《幻想曲》中七段经典音乐的故事化处理，不仅增强了音乐作品的趣味性，又通过各种视觉元素将音乐主题、人生哲理或积极的生存观传达出来，在轻松愉快的氛围中陶冶儿童情操，潜移默化地提高接受者的音乐素养，在北美洲这部电影常常被用来做儿童对古典音乐的启蒙，尤其恐龙的一段特别受小观众的青睐，有些拥有该电影的影音产品的父母会吃惊地发现他们的孩子会哼唱斯特拉文斯基的音乐。近年来随着微电子、光电技术和软件技术的不断发展，视觉技术获得了突飞猛进的发展。例如三维动画中更高效、更精确的动作捕捉技术得到了广泛的研发和应用，由此而催生出一批画面效果惊艳、虚拟角色动作真实可信，感染力极强的视觉作品，与各种音乐类型展开声画结合，在音乐可视化的艺术化、真实化方面做到了新的高度。如Animusic公司出品的视觉音乐作品，用计算机制作概念乐器的演奏效果动画和各种高质量图形的虚拟3D音乐场景，其作品基于音符，由浅入深，趣味性十足地将复杂的和声、旋律等音乐意象直观地呈现出来。
+                    </p>
+                </div>
+                <div class="col-md-3">
+            </div>
+        </div>
+    </body>
+</html>
